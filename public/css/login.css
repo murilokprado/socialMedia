@@ -1,0 +1,10 @@
+@CHARSET "ISO-8859-1";
+
+.background-img{
+	background: url("../img/bg.png") no-repeat center center fixed;
+    background-size: cover;
+    -webkit-background-size: cover; /* SAFARI / CHROME */
+    -moz-background-size: cover; /* FIREFOX */
+    -ms-background-size: cover; /* IE */
+    -o-background-size: cover; /* OPERA */	
+}
