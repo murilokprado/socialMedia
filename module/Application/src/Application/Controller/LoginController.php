@@ -15,6 +15,7 @@ use Zend\Log\Writer\Stream;
 
 class LoginController extends AbstractActionController {
 	protected $loginTable;
+	
 	public function indexAction() {
 		$loginForm = new LoginForm();
 		$this->layout('layout/layoutEmpty');
