@@ -1,4 +1,10 @@
-<?php echo $this->doctype(); 
+<?php 
+use Zend\Session\Container;
+
+$sessao = new Container('Auth');
+$nome = $sessao -> nome;
+
+echo $this->doctype(); 
 function echoActiveClassIfRequestMatches($requestUri)
 {
 	$current_file_name = basename($_SERVER['REQUEST_URI'], ".php");
@@ -21,7 +27,9 @@ function echoActiveClassIfRequestMatches($requestUri)
         <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
                         ->prependStylesheet($this->basePath() . '/css/style.css')
                         ->prependStylesheet($this->basePath() . '/css/bootstrap-theme.min.css')
-                        ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') ?>
+                        ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') 
+                        ->prependStylesheet($this->basePath() . '/css/login.css')
+        ?>
 
         <!-- Scripts -->
         <?php echo $this->headScript()
@@ -32,7 +40,7 @@ function echoActiveClassIfRequestMatches($requestUri)
         ; ?>
 
     </head>
-    <body>
+    <body class="backgroundtime">
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container">
                 <div class="navbar-header">
@@ -45,19 +53,32 @@ function echoActiveClassIfRequestMatches($requestUri)
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li <?=echoActiveClassIfRequestMatches("login")?> ><a href="<?php echo $this->url('login') ?>"><?php echo $this->translate('Linha do Tempo') ?></a></li>
+                        <li <?=echoActiveClassIfRequestMatches("timeline")?> ><a href="<?php echo $this->url('timeline') ?>"><?php echo $this->translate('Linha do Tempo') ?></a></li>
                         <li <?=echoActiveClassIfRequestMatches("register")?>><a href="<?php echo $this->url('register') ?>"><?php echo $this->translate('Amigos') ?></a></li>
-                        <li <?=echoActiveClassIfRequestMatches("register")?>><a href="<?php echo $this->url('register') ?>"><?php echo $this->translate('Encontrar Amigos') ?></a></li>
 			            <li class="dropdown">
-			            	<a href="#" class="dropdown-toggle" data-toggle="dropdown" >Configura&ccedil;&atilde;o</a>
+			            	<a href="#" class="dropdown-toggle" data-toggle="dropdown" ><?php echo $nome; ?></a>
 			              	<ul class="dropdown-menu">
-           				  		<li <?=echoActiveClassIfRequestMatches("register")?>><a href="<?php echo $this->url('register') ?>"><?php echo $this->translate('Status') ?></a></li>
-           				  		<li <?=echoActiveClassIfRequestMatches("register")?>><a href="<?php echo $this->url('register') ?>"><?php echo $this->translate('Conta') ?></a></li>
+           				  		<li <?=echoActiveClassIfRequestMatches("user")?>><a href="<?php echo $this->url('user') ?>"><?php echo $this->translate('Conta') ?></a></li>
 		              		</ul>
 			            </li>
-                       <li <?=echoActiveClassIfRequestMatches("register")?>><a title="Logout" class="glyphicon glyphicon-off" href="<?php echo $this->url('register') ?>"></a></li>
                     </ul>
-                </div><!--/.nav-collapse -->
+                    <ul class="nav navbar-nav navbar-right">
+						<li <?=echoActiveClassIfRequestMatches("logout")?>><a title="Logout" class="glyphicon glyphicon-off" href="<?php echo $this->url('logout') ?>"></a></li>
+                    </ul>
+					<div class="col-sm-3 col-md-3">
+						<form class="navbar-form" role="search" action="/friend" method="post">
+							<div class="input-group">
+								<input type="text" class="form-control" placeholder="Pesquisar Pessoas"
+									name="searchPer" id="searchPer">
+								<div class="input-group-btn">
+									<button class="btn btn-default" type="submit">
+										<i class="glyphicon glyphicon-search"></i>
+									</button>
+								</div>
+							</div>
+						</form>
+					</div>
+			</div><!--/.nav-collapse -->
             </div>
         </nav>
         <div class="container">

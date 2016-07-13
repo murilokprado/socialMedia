@@ -12,15 +12,16 @@ use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use Zend\Validator\Identical;
 use Zend\Log\Logger;
 use Zend\Log\Writer\Stream;
+use Zend\Session\Container;
 
 class LoginController extends AbstractActionController {
+	
 	protected $loginTable;
 	
 	public function indexAction() {
 		$loginForm = new LoginForm();
 		$this->layout('layout/layoutEmpty');
 		$view = new ViewModel(array('form'=>$loginForm));
-		
 		return $view;
 	}
 
@@ -34,10 +35,12 @@ class LoginController extends AbstractActionController {
 		$senha = md5(md5($senha));
 		$dados = $this->getLoginTable()->select(array('email'=>$email,'senha'=>$senha));
 		$row = $dados->current();
-	
+		$sessao = new Container('Auth');
 		if ($request->isPost()) {
 			if ($row != null) {
-				
+				$sessao -> autenticado = true;
+				$sessao -> idUsuario = $row['codUsuario'];
+				$sessao -> nome = $row['nome'];
 				$logger = new Logger();
 				$write = new Stream('./data/log/access.log');
 				$logger->addWriter($write);
@@ -45,9 +48,12 @@ class LoginController extends AbstractActionController {
 				$logger->log(Logger::INFO, 'LOG');
 				$logger->info('Informacao de login - '. date('H:m:s') . ' usuario: ' . $row['email'] . ' entrou.');
 				
-				return $this->redirect()->toRoute('login');
+				// autenticação de login -- quando conseguir logar mandar para a timeline***
+				return $this->redirect()->toRoute('timeline');
 				
 			} else {
+				$sessao -> autenticado = false;
+				$sessao -> idUsuario = null;
 				$this->flashMessenger()->addErrorMessage(utf8_encode('Não foi possível conectar, e-mail ou senha inválido.'));
 				return $this->redirect()->toRoute('login');
 			}
@@ -57,11 +63,14 @@ class LoginController extends AbstractActionController {
 		));
 		return  $view;
 		 
-	}	
-	
-	public function autlogAction() {
-		
 	}
+	
+	public function sairAction()
+	{
+		$sessao = new Container('Auth');
+		$sessao->getManager()->getStorage()->clear();
+		return $this->redirect()->toRoute('login');
+	}	
 	
 	public function registerAction()
 	{
@@ -79,6 +88,7 @@ class LoginController extends AbstractActionController {
 		$request = $this->getRequest();
 		$senha = $request->getPost('senha');
 		$email = $request->getPost('email');
+		$nome = $request->getPost('email');
 		$confirmaSenha = $request->getPost('confirmaSenha');
 		
 		$confirmaSenha = new Identical($confirmaSenha);
@@ -103,8 +113,8 @@ class LoginController extends AbstractActionController {
 					$this->getLoginTable()->insert( array(
 						'email' => $email,
 						'senha' => $senha,
+						'nome' => $nome	
 					));
-					
 				}
 			}
 			$this->flashMessenger()->addMessage('Cadastrado com sucesso');
@@ -120,7 +130,7 @@ class LoginController extends AbstractActionController {
 	{
 		if (!$this->LoginTable) {
 			$this->LoginTable = new TableGateway(
-					'login',
+					'usuario',
 					$this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
 		}
 		return $this->LoginTable;

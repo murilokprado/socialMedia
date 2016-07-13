@@ -11,6 +11,8 @@ namespace Application;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
+use Zend\ModuleManager\ModuleManager;
+use Zend\Session\Container;
 
 class Module
 {
@@ -19,8 +21,31 @@ class Module
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+        
     }
-
+    
+    public function init(ModuleManager $moduleManager)
+    {
+    	$sharedEvents = $moduleManager->getEventManager()->getSharedManager();
+    	 
+    	$sharedEvents->attach('Zend\Mvc\Controller\AbstractActionController', MvcEvent::EVENT_DISPATCH, array($this, 'verificaAutenticacao'), 100);
+    }
+    
+    public function verificaAutenticacao($e)
+    {
+    	$controller = $e->getTarget();
+    	$rota = $controller->getEvent()->getRouteMatch()->getMatchedRouteName();
+    	 
+    	if ($rota != 'register' && $rota != 'login' && $rota != 'login/register') {
+    		 
+    		$sessao = new Container('Auth');
+    		if (!$sessao->autenticado) {
+    			return $controller->redirect()->toRoute('login');
+    		}
+    		 
+    	}
+    }
+    
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';

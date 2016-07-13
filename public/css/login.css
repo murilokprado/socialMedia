@@ -8,3 +8,12 @@
     -ms-background-size: cover; /* IE */
     -o-background-size: cover; /* OPERA */	
 }
+
+.backgroundtime{
+	background: url("../img/backgroundline.png") no-repeat center center fixed;
+    background-size: cover;
+    -webkit-background-size: cover; /* SAFARI / CHROME */
+    -moz-background-size: cover; /* FIREFOX */
+    -ms-background-size: cover; /* IE */
+    -o-background-size: cover; /* OPERA */	
+}

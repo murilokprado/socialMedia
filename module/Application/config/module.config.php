@@ -31,8 +31,22 @@ return array(
 							'defaults' => array (
 									'controller' => 'Application\Controller\Login',
 									'action' => 'index' 
-							) 
-					) 
+							),
+					),
+					'may_terminate' => true,
+					'child_routes' => array(
+							'default' => array(
+									'type'    => 'Segment',
+									'options' => array(
+											'route'    => '[/:action]',
+											'constraints' => array(
+													'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+													'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+											),
+											'defaults' => array(),
+									),
+							),
+					),					
 			),
 			'create' => array (
 					'type' => 'segment',
@@ -45,9 +59,19 @@ return array(
 							'defaults' => array (
 									'controller' => 'Application\Controller\Login',
 									'action' => 'create' 
-							) 
-					) 
+							),
+					), 
 			),
+        	'timeline' => array(
+        			'type' => 'Segment',
+        			'options' => array(
+        					'route'    => '/timeline[/:action][/:id]',
+        					'defaults' => array(
+        							'controller' => 'Application\Controller\Timeline',
+        							'action'     => 'index',
+        					),
+        			),
+        	),        		
 			'register' => array (
 				'type' => 'segment',
 				'options' => array (
@@ -59,8 +83,56 @@ return array(
 					'defaults' => array (
 						'controller' => 'Application\Controller\Login',
 						'action' => 'register' 
-					) 
-				) 
+					),
+				),
+			),
+			'criamensagem' => array (
+				'type' => 'segment',
+				'options' => array (
+					'route' => '/criamensagem[/:action][/:id]',
+					'constraints' => array (
+							'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+							'id' => '[0-9]*' 
+					),
+					'defaults' => array (
+							'controller' => 'Application\Controller\Timeline',
+							'action' => 'criamensagem' 
+					),
+				),
+			),
+			'user' => array(
+				'type' => 'Segment',
+				'options' => array (
+					'route' => '/user[/:action][/:id]',
+					'defaults' => array (
+						'controller' => 'Application\Controller\User',
+						'action' => 'index' 
+					),
+				),
+       		),
+			'friend' => array(
+				'type' => 'Segment',
+				'options' => array (
+					'route' => '/friend[/:action][/:id]',
+					'defaults' => array (
+						'controller' => 'Application\Controller\Friend',
+						'action' => 'index'
+					),
+				),
+			),
+			'logout' => array (
+				'type' => 'segment',
+				'options' => array (
+					'route' => '/',
+					'constraints' => array (
+						'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+						'id' => '[0-9]*' 
+					),
+					'defaults' => array (
+						'controller' => 'Application\Controller\Login',
+						'action' => 'sair' 
+					),
+				), 
 			),        		
             // The following is a route to simplify getting started creating
             // new controllers and actions without needing to create a new
@@ -117,6 +189,9 @@ return array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
         	'Application\Controller\Login' => 'Application\Controller\LoginController',
+        	'Application\Controller\Timeline' => 'Application\Controller\TimelineController',
+        	'Application\Controller\User' => 'Application\Controller\UserController',
+        	'Application\Controller\Friend' => 'Application\Controller\FriendController',
         ),
     ),
     'view_manager' => array(
@@ -127,7 +202,7 @@ return array(
         'exception_template'       => 'error/index',
         'template_map' => array(
             'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
-       		'layout/layoutEmpty'           => __DIR__ . '/../view/layout/layoutEmpty.phtml',
+       		'layout/layoutEmpty'      => __DIR__ . '/../view/layout/layoutEmpty.phtml',
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',

@@ -15,13 +15,13 @@ class LoginForm extends Form {
 		$this->add(array(
 			'name' => 'e-mail', 
 			'attributes' => array(
-				'type' => 'text',
+				'type' => 'email',
 				'required' => true,
 				'placeholder' => 'insira seu e-mail aqui',
 				'class' => 'form-control',
 			),
 			'options' => array(
-				'label' => 'Insira seu e-mail: ',
+				'label' => 'Email: ',
 				'label_attributes' => array('class' => 'control-label'),
 			),
 		));
@@ -31,11 +31,11 @@ class LoginForm extends Form {
 			'attributes' => array(
 				'type' => 'password',
 				'required' => 'required',
-				'placeholder' => 'insira uma senha aqui',
+				'placeholder' => 'insira sua senha aqui',
 				'class' => 'form-control',
 			),
 			'options' => array(
-				'label' => 'Insira uma senha: ',
+				'label' => 'Senha: ',
 				'label_attributes' => array('class' => 'control-label'),
 			),
 		));		
