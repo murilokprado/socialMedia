@@ -1,0 +1,51 @@
+<?php 
+use Zend\Form\View\Helper\FormElement;
+$form->setAttribute('action', $this->url('user', array('action' => 'update')));
+if($this->error):
+?>
+<title>SOCIAL MEDIA</title>
+<p class="error">
+Erro, desculpe.
+</p>
+<?php endif; 
+
+
+$form = $this->form;
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<form class="form-horizontal">
+	<div class="container">
+	  <h1 class="text-center login-title">Linha do tempo</h1>
+		<?php 
+	        $flash = $this->flashMessenger();
+	        $flash->setMessageOpenFormat('<div%s>
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+			    	&times;
+			    </button>
+			<ul><li>')
+	        ->setMessageSeparatorString('</li><li>')
+			->setMessageCloseString('</li></ul></div>');
+			echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));        							    
+			echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+			echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+			echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+		?>	  
+	  <div class="form-group">
+	    <?= $this->formlabel($form->get('nome')); ?>
+	    <?= $this->formelement($form->get('nome')); ?>
+	  </div>
+	  <div class="form-group">
+		<?= $this->formlabel($form->get('status')); ?>
+		<?= $this->formelement($form->get('status')); ?>
+      </div>	
+        
+	  <div class="form-group">
+	  	  <?= $this->formlabel($form->get('file'));?>
+	      <?= $this->formElement($form->get('file'));?>
+	  </div>
+	      <a href = "javascript:history.back()"><button type="button" class="btn btn-primary">Voltar</button></a>
+	      <?= $this->formElement($form->get('submit'));?>
+	</div>
+</form>
+<?php $this->form()->closeTag($form); ?>

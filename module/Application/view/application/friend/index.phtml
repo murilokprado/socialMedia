@@ -1,0 +1,65 @@
+<?php 
+use Zend\Form\View\Helper\FormElement;
+$form->setAttribute('action', $this->url('friend', array('action' => 'update')));
+if($this->error):
+?>
+<title>SOCIAL MEDIA</title>
+<p class="error">
+Erro, desculpe.
+</p>
+<?php endif; 
+
+
+$form = $this->form;
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<form class="form-horizontal">
+	<div class="container">
+	  <h1 class="text-center login-title">Pessoas Encontradas</h1>
+		<?php 
+	        $flash = $this->flashMessenger();
+	        $flash->setMessageOpenFormat('<div%s>
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+			    	&times;
+			    </button>
+			<ul><li>')
+	        ->setMessageSeparatorString('</li><li>')
+			->setMessageCloseString('</li></ul></div>');
+			echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));        							    
+			echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+			echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+			echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+		?>
+		 <div class="jumbotron" style="min-height:400px;height:auto;">
+		<ul class="list-group">
+		<?php
+		foreach ($pessoas as $pessoa){
+			echo '<li class="list-group-item user-item text-left">';
+			$validator = new \Zend\Validator\File\Exists();
+			$validator->addDirectory('public/img/');
+			$img = "fotoperfil_".$pessoa['codUsuario'].".jpg";
+				
+			if($validator->isValid($img)){
+				echo '<img class="img-circle img-user" src="img/'.$img.'">';
+			} else {
+				echo '<img class="img-circle img-user" src="img/avatar.png">';
+			}
+				
+			echo '<h3>';
+			echo '<b>Nome: </b>' . $pessoa['nome'] . '<br>';
+			echo '<b>Status: </b>' . $pessoa['descricaoStatus'] . '<br>';
+			echo '<b>Email: </b>' . $pessoa['email'] . '<br>';
+			echo '</h3>';
+			echo '<a href="/friend/add/'.$pessoa['codUsuario'].'"><button type="button" class="btn btn-success pull-right">Adicionar</button></a>';			
+			echo '</li>';
+			
+		}
+		?>
+		</ul>
+		</div>
+	      <a href = "javascript:history.back()"><button type="button" class="btn btn-primary">Voltar</button></a>
+	      <?php //echo $this->formElement($form->get('submit'));?>
+	</div>
+</form>
+<?php echo $this->form()->closeTag($form); ?>

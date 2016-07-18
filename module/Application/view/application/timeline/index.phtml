@@ -1,0 +1,97 @@
+<?php 
+use Zend\Form\View\Helper\FormElement;
+use Zend\Session\Container;
+
+$form->setAttribute('action', $this->url('timeline', array('action' => 'criamensagem')));
+if($this->error):
+?>
+<title>SOCIAL MEDIA</title>
+<p class="error">
+Erro, desculpe.
+</p>
+<?php endif; 
+
+
+$form = $this->form;
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+</style>
+
+<form class="form-horizontal">
+	<div class="container">
+	  <h1 class="text-center login-title">Linha do tempo</h1>
+		<?php 
+	        $flash = $this->flashMessenger();
+	        $flash->setMessageOpenFormat('<div%s>
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+			    	&times;
+			    </button>
+			<ul><li>')
+	        ->setMessageSeparatorString('</li><li>')
+			->setMessageCloseString('</li></ul></div>');
+			echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));        							    
+			echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+			echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+			echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+		?>	  
+	  <div class="form-group">
+	    <?= $this->formlabel($form->get('mensagem')); ?>
+	    <div class="col-sm-10">
+	    	<?= $this->formelement($form->get('mensagem')); ?>
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <div class="col-sm-offset-2 col-sm-10">
+	      <?= $this->formElement($form->get('submit'));?>
+	    </div>
+	  </div>
+<?php	
+	$sessao = new Container('Auth');
+	$idUsuario = $sessao->idUsuario;
+	foreach ($mensagem as $m) {
+	?>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<div class="row">
+					<div class="col-sm-1">
+					<div class="thumbnail">
+					<?php 
+					$validator = new \Zend\Validator\File\Exists();
+					$validator->addDirectory('public/img/');
+					$img = "fotoperfil_".$m['codigoUsuario'].".jpg";
+					
+					if($validator->isValid($img)){
+						echo '<img class="img-responsive user-photo" src="img/'.$img.'">';
+					} else {
+						echo '<img class="img-responsive user-photo" src="img/avatar.png">';
+					}					
+					?>		
+					</div><!-- /thumbnail -->
+					</div><!-- /col-sm-1 -->	
+		
+					<div class="col-sm-10">
+			 			<div class="panel panel-default">
+							<div class="panel-heading">
+							<?php 
+							if($idUsuario != $m['codigoUsuario'])
+								echo '<strong>'.$m['nomeAmigo'].'</strong>';
+							else 
+								echo '<strong>Eu:</strong>';
+							
+							echo '<span class="text-muted"> ' . $m['data'] .'</span>';
+							?>	
+							</div>
+							<div class="panel-body">
+								<?= $m['mensagemAm']; ?>
+							</div><!-- /panel-body -->
+						</div><!-- /panel panel-default -->
+					</div><!-- /col-sm-5 -->
+				</div><!-- /row -->
+  			</div>
+	<?php 
+	}
+	?> 
+	</div> 
+</form>
+<?php echo $this->form()->closeTag($form); ?>

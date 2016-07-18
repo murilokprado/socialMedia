@@ -35,14 +35,12 @@ class Module
     {
     	$controller = $e->getTarget();
     	$rota = $controller->getEvent()->getRouteMatch()->getMatchedRouteName();
-    	 
     	if ($rota != 'register' && $rota != 'login' && $rota != 'login/register') {
     		 
     		$sessao = new Container('Auth');
     		if (!$sessao->autenticado) {
     			return $controller->redirect()->toRoute('login');
-    		}
-    		 
+    		} 
     	}
     }
     

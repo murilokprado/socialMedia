@@ -56,6 +56,5 @@ where usuario.codUsuario = '1';
 select amigo.codUsuarioAmigo, mensagem.descricaoMensagem, usuario.nome, DATE_FORMAT(dataMensagem, '%d/%m/%Y - %H:%i:%S') as data from amigo inner join mensagem on (amigo.codUsuarioAmigo = mensagem.codUsuario) inner join usuario on (amigo.codUsuarioAmigo = usuario.codUsuario) where amigo.codUsuario ='2' || usuario.codUsuario ='2';
 
 -- select de amizade
-select codUsuario, codUsuarioAmigo from amigo where codUsuario = '2' and codUsuarioAmigo = '1' union all select codUsuario, codUsuarioAmigo from amigo where codUsuario = '1' and codUsuarioAmigo ='2'; 
-select * from amigo where (codUsuario = '2' OR codUsuarioAmigo = '2') AND situacao = 'A';
+select * from amigo where (idSolicitante = '2' OR idSolicitado = '2') AND situacao = 'A';
 

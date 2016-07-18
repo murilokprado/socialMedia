@@ -17,3 +17,44 @@
     -ms-background-size: cover; /* IE */
     -o-background-size: cover; /* OPERA */	
 }
+
+.backgrounderror{
+	background: #2E95EF;
+	background-image: -webkit-gradient(radial, 50% 50%, 0, 50% 50%,800, from(#9BD1FF), to(#2E95EF));
+    background-size: cover;
+    -webkit-background-size: cover; /* SAFARI / CHROME */
+    -moz-background-size: cover; /* FIREFOX */
+    -ms-background-size: cover; /* IE */
+    -o-background-size: cover; /* OPERA */	
+	
+}
+
+.jumbotron .btn {
+    color:#FFFFFF; 
+    padding: 5px !important;
+    font-size: 12px !important; 
+    margin-left:20px;
+}
+.jumbotron label {
+    font-size:12px;    
+}
+
+.img-user{
+    height:120px;
+    width:120px;
+}
+
+.prj-name{
+    font-weight:bold;
+    color:#5bc0de;
+}
+
+.user-item img, .user-item h3 {
+    display:inline-block;    
+}
+
+.jumbotron .btn .user-item h3 a{
+    color:#5bc0de; 
+    padding: 5px !important;
+    font-size: 12px !important; 
+}

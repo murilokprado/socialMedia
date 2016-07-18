@@ -1,12 +1,14 @@
-<h1><?php echo $this->translate('A 404 error occurred') ?></h1>
+<?php $this->layout('layout/layout404'); ?>
+<img class="img-error" src="/img/dooh.png">
+<h1><?php echo $this->translate('404 Not Found') ?></h1>
 <h2><?php echo $this->message ?></h2>
 
 <?php if (isset($this->reason) && $this->reason): ?>
 
 <?php
-$reasonMessage= '';
-switch ($this->reason) {
-    case 'error-controller-cannot-dispatch':
+	$reasonMessage = '';
+	switch ($this->reason) {
+		case 'error-controller-cannot-dispatch':
         $reasonMessage = $this->translate('The requested controller was unable to dispatch the request.');
         break;
     case 'error-controller-not-found':
@@ -101,6 +103,7 @@ if (isset($this->controller_class)
 <?php else: ?>
 
 <h3><?php echo $this->translate('No Exception available') ?></h3>
+<p><a class="btn btn-primary btn-lg" href="javascript:history.back()" role="button">Voltar</a></p>
 
 <?php endif ?>
 

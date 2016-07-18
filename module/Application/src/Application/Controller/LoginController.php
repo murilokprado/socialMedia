@@ -33,31 +33,39 @@ class LoginController extends AbstractActionController {
 		$senha = $request->getPost('senha');
 	
 		$senha = md5(md5($senha));
-		$dados = $this->getLoginTable()->select(array('email'=>$email,'senha'=>$senha));
-		$row = $dados->current();
-		$sessao = new Container('Auth');
-		if ($request->isPost()) {
-			if ($row != null) {
-				$sessao -> autenticado = true;
-				$sessao -> idUsuario = $row['codUsuario'];
-				$sessao -> nome = $row['nome'];
-				$logger = new Logger();
-				$write = new Stream('./data/log/access.log');
-				$logger->addWriter($write);
-				
-				$logger->log(Logger::INFO, 'LOG');
-				$logger->info('Informacao de login - '. date('H:m:s') . ' usuario: ' . $row['email'] . ' entrou.');
-				
-				// autenticação de login -- quando conseguir logar mandar para a timeline***
-				return $this->redirect()->toRoute('timeline');
-				
-			} else {
-				$sessao -> autenticado = false;
-				$sessao -> idUsuario = null;
-				$this->flashMessenger()->addErrorMessage(utf8_encode('Não foi possível conectar, e-mail ou senha inválido.'));
-				return $this->redirect()->toRoute('login');
+		
+		try {
+			$dados = $this->getLoginTable()->select(array('email'=>$email,'senha'=>$senha));
+			$row = $dados->current();
+			$sessao = new Container('Auth');
+			if ($request->isPost()) {
+				if ($row != null) {
+					$sessao -> autenticado = true;
+					$sessao -> idUsuario = $row['codUsuario'];
+					$sessao -> nome = $row['nome'];
+					$logger = new Logger();
+					$write = new Stream('./data/log/access.log');
+					$logger->addWriter($write);
+					
+					$logger->log(Logger::INFO, 'LOG');
+					$logger->info('Informacao de login - '. date('H:m:s') . ' usuario: ' . $row['email'] . ' entrou.');
+					
+					// autenticação de login -- quando conseguir logar mandar para a timeline***
+					return $this->redirect()->toRoute('timeline');
+					
+				} else {
+					$sessao -> autenticado = false;
+					$sessao -> idUsuario = null;
+					$this->flashMessenger()->addErrorMessage(utf8_encode('Não foi possível conectar, e-mail ou senha inválido.'));
+					return $this->redirect()->toRoute('login');
+				}
 			}
+		} catch(Exception $e) {
+			$this->flashMessenger()->addErrorMessage(utf8_encode('Login de conta indisponivel do momento.'));
+			return $this->redirect()->toRoute('login');
+			
 		}
+		
 		$view = new ViewModel(array(
 				'form' => $form
 		));
@@ -88,40 +96,45 @@ class LoginController extends AbstractActionController {
 		$request = $this->getRequest();
 		$senha = $request->getPost('senha');
 		$email = $request->getPost('email');
-		$nome = $request->getPost('email');
+		$nome = $request->getPost('nome');
 		$confirmaSenha = $request->getPost('confirmaSenha');
 		
 		$confirmaSenha = new Identical($confirmaSenha);
 		if (!$confirmaSenha->isValid($senha)) {
 			$this->flashMessenger()->addErrorMessage(utf8_encode('A senha digitada no campo de confirmação é diferente do campo senha.'));
 			return $this->redirect()->toRoute('register');
-		}		
-		$sql = new Sql( $this->getLoginTable()->adapter ) ;
-		$select = $sql->select();
-		$select -> from($this->getLoginTable()->getTable());
-		$select->where(array('email' => $email));
-		$result = $this->getLoginTable()->selectWith($select);
-		if(count($result) == 0)
-		{
-			if ($request->isPost()) {
-				$form->setData($request->getPost());
-				
-				$senha = md5(md5($senha));
-				
-				if ($form->isValid ()) {
+		}
+		try {
+			$sql = new Sql( $this->getLoginTable()->adapter ) ;
+			$select = $sql->select();
+			$select -> from($this->getLoginTable()->getTable());
+			$select->where(array('email' => $email));
+			$result = $this->getLoginTable()->selectWith($select);
+			if(count($result) == 0)
+			{
+				if ($request->isPost()) {
+					$form->setData($request->getPost());
 					
-					$this->getLoginTable()->insert( array(
-						'email' => $email,
-						'senha' => $senha,
-						'nome' => $nome	
-					));
+					$senha = md5(md5($senha));
+					
+					if ($form->isValid ()) {
+						
+						$this->getLoginTable()->insert( array(
+							'email' => $email,
+							'senha' => $senha,
+							'nome' => $nome	
+						));
+					}
 				}
+				$this->flashMessenger()->addMessage('Cadastrado com sucesso');
+				return $this->redirect()->toRoute('login');
+					
+			} else {
+				$this->flashMessenger()->addErrorMessage(utf8_encode('E-mail já cadastrado, tente novamente com outro e-mail.'));
+				return $this->redirect()->toRoute('register');
 			}
-			$this->flashMessenger()->addMessage('Cadastrado com sucesso');
-			return $this->redirect()->toRoute('login');
-				
-		} else {
-			$this->flashMessenger()->addErrorMessage(utf8_encode('E-mail já cadastrado, tente novamente com outro e-mail.'));
+		} catch(Exception $e) {
+			$this->flashMessenger()->addErrorMessage(utf8_encode('Cadastro de conta indisponivel do momento.'));
 			return $this->redirect()->toRoute('register');
 		}
 	}	

@@ -65,10 +65,10 @@ function echoActiveClassIfRequestMatches($requestUri)
                     <ul class="nav navbar-nav navbar-right">
 						<li <?=echoActiveClassIfRequestMatches("logout")?>><a title="Logout" class="glyphicon glyphicon-off" href="<?php echo $this->url('logout') ?>"></a></li>
                     </ul>
-					<div class="col-sm-3 col-md-3">
+					<div class="col-sm-3 col-md-4">
 						<form class="navbar-form" role="search" action="/friend" method="post">
 							<div class="input-group">
-								<input type="text" class="form-control" placeholder="Pesquisar Pessoas"
+								<input type="text" class="form-control" placeholder="Procure pessoas pelo nome"
 									name="searchPer" id="searchPer">
 								<div class="input-group-btn">
 									<button class="btn btn-default" type="submit">
