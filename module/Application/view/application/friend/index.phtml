@@ -1,5 +1,6 @@
 <?php 
 use Zend\Form\View\Helper\FormElement;
+use Zend\Session\Container;
 $form->setAttribute('action', $this->url('friend', array('action' => 'update')));
 if($this->error):
 ?>
@@ -34,6 +35,9 @@ echo $this->form()->openTag($form);
 		 <div class="jumbotron" style="min-height:400px;height:auto;">
 		<ul class="list-group">
 		<?php
+		$sessao = new Container('Auth');
+		$idUsuario = $sessao->idUsuario;
+		
 		foreach ($pessoas as $pessoa){
 			echo '<li class="list-group-item user-item text-left">';
 			$validator = new \Zend\Validator\File\Exists();
@@ -45,13 +49,30 @@ echo $this->form()->openTag($form);
 			} else {
 				echo '<img class="img-circle img-user" src="img/avatar.png">';
 			}
-				
+			
 			echo '<h3>';
 			echo '<b>Nome: </b>' . $pessoa['nome'] . '<br>';
 			echo '<b>Status: </b>' . $pessoa['descricaoStatus'] . '<br>';
 			echo '<b>Email: </b>' . $pessoa['email'] . '<br>';
 			echo '</h3>';
-			echo '<a href="/friend/add/'.$pessoa['codUsuario'].'"><button type="button" class="btn btn-success pull-right">Adicionar</button></a>';			
+				
+			if(!$pessoa['situacao']) {
+				echo '<a href="/friend/add/'.$pessoa['codUsuario'].'"><button type="button" class="btn btn-success pull-right">Adicionar</button></a>';
+			} else if ($pessoa['situacao'] == 'P' && $pessoa['idSolicitado'] == $idUsuario) {
+				echo '<a href="/friend/addpend/'.$pessoa['codAmigo'].'"><button type="button" class="btn btn-info pull-right">Aceitar</button></a>';
+				echo '<a href="/friend/rec/'.$pessoa['codAmigo'].'"><button type="button" class="btn btn-warning pull-right">Recusar</button></a>';
+			} else if ($pessoa['situacao'] == 'P') {
+				echo '<button type="button" class="btn btn-warning pull-right">Pendente</button>';
+			} else if ($pessoa['situacao'] == 'A') {
+				echo '<button type="button" class="btn btn-primary pull-right">Amigo</button>';
+				echo '<a href="/friend/remove/'.$pessoa['codAmigo'].'"><button type="button" class="btn btn-danger pull-right">Excluir</button></a>';
+			} else if ($pessoa['situacao'] == 'R' && $pessoa['idSolicitado'] != $idUsuario){
+				echo '<a href="/friend/addagain/'.$pessoa['codAmigo'].'"><button type="button" class="btn btn-danger pull-right">O Pedido de amizade foi recusado, Tentar Adicionar Novamente</button></a>';
+			} else if ($pessoa['situacao'] == 'R') {
+				echo '<button type="button" class="btn btn-danger pull-right">Recusado</button>';
+			}
+			
+			
 			echo '</li>';
 			
 		}

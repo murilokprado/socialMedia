@@ -27,13 +27,14 @@ class TimelineController extends AbstractActionController {
 		try {
 			$statement = $db->query ( $sql );
 			$mensagem = $statement->execute();
+			
 			$mensagens = array();
 		} catch (Exception $e) {
 			$this->flashMessenger()->addErrorMessage(utf8_encode('Consulta as mensagens não está disponivel no momento.'));
 			return $this->redirect()->toRoute('timeline');
 		}
 		
-		if(!is_array($mensagem)) {
+		if(is_array($mensagem)) {
 			try {
 				$sql = "select usuario.codUsuario, mensagem.descricaoMensagem mensagemAm, usuario.nome nomeAmigo, mensagem.codUsuario as codigoUsuario, dataMensagem as data
 						 from mensagem inner join usuario on (mensagem.codUsuario = usuario.codUsuario) where mensagem.codUsuario = $idUsuario";

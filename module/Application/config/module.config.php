@@ -110,13 +110,23 @@ return array(
 					),
 				),
        		),
-			'friend' => array(
+			'person' => array(
+				'type' => 'Segment',
+				'options' => array (
+					'route' => '/person[/:action][/:id]',
+					'defaults' => array (
+						'controller' => 'Application\Controller\Friend',
+						'action' => 'index'
+					),
+				),
+			),
+			'friend' => array (
 				'type' => 'Segment',
 				'options' => array (
 					'route' => '/friend[/:action][/:id]',
 					'defaults' => array (
-						'controller' => 'Application\Controller\Friend',
-						'action' => 'index'
+							'controller' => 'Application\Controller\Friend',
+							'action' => 'friends' 
 					),
 				),
 			),

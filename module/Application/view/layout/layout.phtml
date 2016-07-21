@@ -54,7 +54,7 @@ function echoActiveClassIfRequestMatches($requestUri)
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li <?=echoActiveClassIfRequestMatches("timeline")?> ><a href="<?php echo $this->url('timeline') ?>"><?php echo $this->translate('Linha do Tempo') ?></a></li>
-                        <li <?=echoActiveClassIfRequestMatches("register")?>><a href="<?php echo $this->url('register') ?>"><?php echo $this->translate('Amigos') ?></a></li>
+                        <li <?=echoActiveClassIfRequestMatches("register")?>><a href="<?php echo $this->url('friend') ?>"><?php echo $this->translate('Amigos') ?></a></li>
 			            <li class="dropdown">
 			            	<a href="#" class="dropdown-toggle" data-toggle="dropdown" ><?php echo $nome; ?></a>
 			              	<ul class="dropdown-menu">
@@ -66,7 +66,7 @@ function echoActiveClassIfRequestMatches($requestUri)
 						<li <?=echoActiveClassIfRequestMatches("logout")?>><a title="Logout" class="glyphicon glyphicon-off" href="<?php echo $this->url('logout') ?>"></a></li>
                     </ul>
 					<div class="col-sm-3 col-md-4">
-						<form class="navbar-form" role="search" action="/friend" method="post">
+						<form class="navbar-form" role="search" action="/person" method="post">
 							<div class="input-group">
 								<input type="text" class="form-control" placeholder="Procure pessoas pelo nome"
 									name="searchPer" id="searchPer">

@@ -43,18 +43,4 @@ insert into mensagem (codUsuario, descricaoMensagem, dataMensagem) VALUES ('2', 
 insert into mensagem (codUsuario, descricaoMensagem, dataMensagem) VALUES ('3', 'mensagem do pedro', sysdate());
 insert into mensagem (codUsuario, descricaoMensagem, dataMensagem) VALUES ('3', 'mensagem do pedro 2', sysdate());
 
--- select geral
-select usuario.nome nomeUsuario, status.descricaoStatus meuStatus, amigo.codUsuarioAmigo, dadosAmigo.nome nomeAmigo, mensagem.descricaoMensagem mensagemAmigo
-from usuario  
-inner join status on (usuario.codStatus = status.codStatus) 
-inner join amigo on (amigo.codUsuario = usuario.codUsuario) 
-inner join mensagem on (amigo.codUsuarioAmigo = mensagem.codUsuario)
-inner join usuario as dadosAmigo on (amigo.codUsuarioAmigo = dadosAmigo.codUsuario) 
-where usuario.codUsuario = '1'; 
-
--- select de mensagem de amigos
-select amigo.codUsuarioAmigo, mensagem.descricaoMensagem, usuario.nome, DATE_FORMAT(dataMensagem, '%d/%m/%Y - %H:%i:%S') as data from amigo inner join mensagem on (amigo.codUsuarioAmigo = mensagem.codUsuario) inner join usuario on (amigo.codUsuarioAmigo = usuario.codUsuario) where amigo.codUsuario ='2' || usuario.codUsuario ='2';
-
--- select de amizade
-select * from amigo where (idSolicitante = '2' OR idSolicitado = '2') AND situacao = 'A';
 
